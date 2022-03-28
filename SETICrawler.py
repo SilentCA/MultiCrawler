@@ -75,7 +75,7 @@ def GetInfo(uid):
     host_url = HOSTS_URL+str(uid)
     user_soup = GetSoup(user_url)
     if user_soup == None:
-        return None
+        return [None]
     user_info = GetUserInfo(user_soup)
 
     if user_info[0]==None:
@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
     input_str = input("start_id end_id is_new_file(0 or 1) file_name(ignore if use default)\nPlease input--> ")
     input_list = input_str.split()
-    if len(input_list) != 3 & len(input_list) != 4:
+    if len(input_list) != 3 and len(input_list) != 4:
         print("Input error! Expect 3 or 4 parameters")
         quit()
     

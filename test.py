@@ -5,10 +5,10 @@ import sys
 #url = SC.HOSTS_URL+'1000'
 #soup = SC.GetSoup(url).getText()
 
-s = [1, 2, 4]
+s = [None]*3
 a, b, c = s
-print(a)
-print(b)
+#print(a)
+print(s)
 
 """ findindex = lambda self,i,value:sorted(self,key=lambda x:x[i]!=value)[0]
 
