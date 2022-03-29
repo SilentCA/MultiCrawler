@@ -90,7 +90,7 @@ def CollectData(file_name, start, end):
     for uid in range(start, end+1):
         print('current uid: '+str(uid))
         info = [uid] + GetInfo(uid)
-        if info[1] == None:
+        if info[1] == None or info[3]=='0': #no record or total credit = 0
             continue
         print('writing......')
         with open(file_name, 'a+', newline='', encoding="utf-8") as write_obj:
