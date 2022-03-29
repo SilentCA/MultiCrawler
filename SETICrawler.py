@@ -23,8 +23,9 @@ def GetSoup(url):
         strhtml = session.get(url, proxies=proxies, timeout=10)
         soup = BeautifulSoup(strhtml.text, 'lxml')
         return(soup)
-    except:
+    except requests.exceptions.RequestException as e:
         print('Error! URL='+url)
+        print(e)
         return(None)
 
 
