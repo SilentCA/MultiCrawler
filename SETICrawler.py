@@ -3,6 +3,12 @@ from bs4 import BeautifulSoup
 from csv import writer
 import sys
 from requests.adapters import HTTPAdapter
+from fake_useragent import UserAgent
+from multiprocessing import Pool
+
+UIDs = range(10000, 20000)
+N_PROCESS = 50
+OUT_FILE_NAME = 'SETI_MUL_10000_20000.csv'
 
 USERS_URL = 'https://setiathome.berkeley.edu/show_user.php?userid='
 HOSTS_URL = 'https://setiathome.berkeley.edu/hosts_user.php?sort=rpc_time&rev=0&show_all=1&userid='
@@ -11,6 +17,8 @@ N_user_info = 6
 N_host_info = 2
 
 def GetSoup(url):
+    #ua = UserAgent()
+    #headers = { 'User-Agent':ua.random }
     proxies = {
       "http": None,
       "https": None,
@@ -20,6 +28,7 @@ def GetSoup(url):
     session.mount('https://', HTTPAdapter(max_retries=5))
     
     try:
+        #strhtml = session.get(url, headers=headers, proxies=proxies, timeout=10)
         strhtml = session.get(url, proxies=proxies, timeout=10)
         soup = BeautifulSoup(strhtml.text, 'lxml')
         return(soup)
@@ -86,16 +95,10 @@ def GetInfo(uid):
         host_info = GetHostInfo(host_soup)
         return(user_info+host_info)
 
-def CollectData(file_name, start, end):
-    for uid in range(start, end+1):
-        print('current uid: '+str(uid))
-        info = [uid] + GetInfo(uid)
-        if info[1] == None: #no record
-            continue
-        print('writing......')
-        with open(file_name, 'a+', newline='', encoding="utf-8") as write_obj:
-            csv_writer = writer(write_obj)
-            csv_writer.writerow(info)
+def CollectData_it(uid):    
+    #print('current uid: '+str(uid))
+    info = [uid] + GetInfo(uid)
+    return(info)
 
 def CreateFile(file_name):
     columns = COLUMNS
@@ -103,34 +106,22 @@ def CreateFile(file_name):
             csv_writer = writer(write_obj)
             csv_writer.writerow(columns)
 
-if __name__ == '__main__':
-    file_name = 'SETI_User_Stat.csv'
-    is_new_file = 0
-    start_id = 1
-    end_id = 12000000
-
-    if len(sys.argv) > 1:
-        start_id = int(sys.argv[1])
-        end_id = int(sys.argv[2])
-        is_new_file = int(sys.argv[3])
-        if(len(sys.argv)==5):
-            file_name = sys.argv[4]
+def setcallback(x):
+    if x[1] == None: #no record
+        print(x[0])
     else:
-        input_str = input("start_id end_id is_new_file(0 or 1) file_name(ignore if use default)\nPlease input--> ")
-        input_list = input_str.split()
-        if len(input_list) != 3 and len(input_list) != 4:
-            print("Input error! Expect 3 or 4 parameters")
-            quit() 
-        start_id = int(input_list[0])
-        end_id = int(input_list[1])
-        is_new_file = int(input_list[2])
-        if len(input_list) == 4:
-            file_name = input_list[3]
-    
-    if(is_new_file==1):
-        CreateFile(file_name)
-    
-    CollectData(file_name, start_id, end_id)
+        with open(OUT_FILE_NAME, 'a+', newline='', encoding="utf-8") as write_obj:
+            csv_writer = writer(write_obj)
+            csv_writer.writerow(x)
+        print(x[0])
+
+if __name__ == '__main__':
+
+    pool = Pool(processes=N_PROCESS)
+    for i in UIDs:
+        pool.apply_async(CollectData_it, args=(i,), callback=setcallback)
+    pool.close()  # 关闭进程池，不再接受新的进程
+    pool.join()  # 主进程阻塞等待子进程的退出
 
 
     
