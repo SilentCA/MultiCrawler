@@ -109,27 +109,16 @@ if __name__ == '__main__':
     start_id = 1
     end_id = 12000000
 
-    input_str = input("start_id end_id is_new_file(0 or 1) file_name(ignore if use default)\nPlease input--> ")
-    input_list = input_str.split()
-    if len(input_list) != 3 and len(input_list) != 4:
-        print("Input error! Expect 3 or 4 parameters")
-        quit()
-    
-    start_id = int(input_list[0])
-    end_id = int(input_list[1])
-    is_new_file = int(input_list[2])
-    if len(input_list) == 4:
-        file_name = input_list[3]
+    start_id = int(sys.argv[1])
+    end_id = int(sys.argv[2])
+    is_new_file = int(sys.argv[3])
+    if(len(sys.argv)==5):
+        file_name = sys.argv[4]
     
     if(is_new_file==1):
         CreateFile(file_name)
     
     CollectData(file_name, start_id, end_id)
-    
-    """ file_name = sys.argv[2]
-    if sys.argv[1] != '0':
-        CreateFile(file_name)
-    CollectData(file_name, int(sys.argv[3]), int(sys.argv[4])) """
 
 
     
