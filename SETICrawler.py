@@ -79,7 +79,7 @@ def GetInfo(uid):
         return [None]
     user_info = GetUserInfo(user_soup)
 
-    if user_info[0]==None:
+    if user_info[0]==None or user_info[2]=='0':#no record or total credit = 0
         return(user_info+[None]*N_host_info)
     else:    
         host_soup = GetSoup(host_url)
@@ -90,7 +90,7 @@ def CollectData(file_name, start, end):
     for uid in range(start, end+1):
         print('current uid: '+str(uid))
         info = [uid] + GetInfo(uid)
-        if info[1] == None or info[3]=='0': #no record or total credit = 0
+        if info[1] == None: #no record
             continue
         print('writing......')
         with open(file_name, 'a+', newline='', encoding="utf-8") as write_obj:
