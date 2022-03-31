@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from csv import writer
 import sys
 from requests.adapters import HTTPAdapter
-from fake_useragent import UserAgent
+#from fake_useragent import UserAgent
 from multiprocessing import Pool
 
 UIDs = range(10000, 20000)
