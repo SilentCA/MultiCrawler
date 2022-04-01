@@ -10,12 +10,12 @@ Get SETI user's anonymous information (Multiprocessing)
 
 # Usage:
 ### Edit the SETICrawler.py to config:
-- UIDs: User ID range that you would like to obtain
+- UIDs: User ID range that you would like to obtain (from 1 to 12000000)
 - N_PROCESS: The number of processes for multiprocessing
 - OUT_FILE_NAME: Output csv file name and path
 ### Run the program:
 - On Ubuntu: python3 SETICrawler.py
 - On Ubuntu(in background): nohup python3 SETICrawler.py &
 ### Output:
-- stdout/nohup.out: a list of User IDs that has been covered
+- stdout/nohup.out: a list of User IDs that have been covered
 - XXXX.csv: the obtained user information
