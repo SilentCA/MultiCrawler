@@ -5,6 +5,22 @@ import sys
 from requests.adapters import HTTPAdapter
 #from fake_useragent import UserAgent
 from multiprocessing import Pool
+import smtplib, ssl
+
+
+#------------- Email Setting --------------------
+stmp_server = 'smtp.qq.com'
+port = 465  # For SSL
+sender_email = 'sender@qq.com'
+password = "xxx"
+receiver_email = 'receiver@qq.com'
+message = '''\
+From: Working server <sender@qq.com>
+To: Administrator <receiver@qq.com>
+Subject: Python email test
+
+This message is sent using Python.'''
+
 
 UIDs = range(10000, 20000)
 N_PROCESS = 50
@@ -123,10 +139,8 @@ if __name__ == '__main__':
     pool.close()  # 关闭进程池，不再接受新的进程
     pool.join()  # 主进程阻塞等待子进程的退出
 
-
-    
-
-
-    
-
-
+    #------ Sending notification email -------
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(stmp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message)
