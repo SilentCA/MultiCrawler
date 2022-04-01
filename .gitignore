@@ -153,3 +153,4 @@ cython_debug/
 test.csv
 remote/
 nohup.out
+test.py
